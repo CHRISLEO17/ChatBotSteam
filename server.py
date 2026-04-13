@@ -1,17 +1,14 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
-import os
-from openai import OpenAI
 
 app = FastAPI()
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-class ChatRequest(BaseModel):
-    message: str
+@app.get("/")
+def read_root():
+    return {"message": "Chatbot Steam está en línea ✅"}
 
 @app.post("/chat")
-async def chat_endpoint(req: ChatRequest):
-    user_msg = req.message
-    # Aquí llamas a tu lógica del chatbot
-    respuesta = f"Procesando: {user_msg}"  # reemplaza con tu función procesar_mensaje
-    return {"respuesta": respuesta}
+def chat_endpoint(message: dict):
+    user_input = message.get("text", "")
+    # Aquí puedes conectar tu lógica del chatbot
+    respuesta = f"Recibí tu mensaje: {user_input}"
+    return {"reply": respuesta}
